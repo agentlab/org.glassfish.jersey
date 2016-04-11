@@ -9,9 +9,9 @@
 	<packaging>pom</packaging>
 	
 	<parent>
-		<groupId>ru.agentlab.orbit</groupId>
-		<artifactId>ru.agentlab.orbit.parent</artifactId>
-		<relativePath>../../../orbit-parent/ru.agentlab.orbit.parent/pom.xml</relativePath>
+		<groupId>org.eclipseorbit</groupId>
+		<artifactId>org.eclipseorbit.parent</artifactId>
+		<relativePath>../../../orbit-parent/org.eclipseorbit.parent/pom.xml</relativePath>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
@@ -20,7 +20,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0.0</version>
 				<executions>
 					<execution>
 						<phase>initialize</phase>
