@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.glassfish.jersey</groupId>
+	<artifactId>org.glassfish.jersey.deploy</artifactId>
+	
+	<packaging>pom</packaging>
+	
+	<parent>
+		<groupId>ru.agentlab.orbit</groupId>
+		<artifactId>ru.agentlab.orbit.parent</artifactId>
+		<relativePath>../../../orbit-parent/ru.agentlab.orbit.parent/pom.xml</relativePath>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../org.glassfish.jersey.repository/target/repository/buildNumber.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-eclipserun-plugin</artifactId>
+				<configuration>
+					<!-- IMPORTANT: DO NOT split the arg line -->
+					<appArgLine>-application org.eclipse.ant.core.antRunner -buildfile ../../../orbit-parent/ru.agentlab.orbit.parent/packaging-p2composite.ant p2.composite.add -Dsite.label="Composite Site Example" -Dsite.dir=${site.dir} -Dproject.build.directory=${project.basedir}/../org.glassfish.jersey.repository/target -DunqualifiedVersion=${unqualifiedVersion} -DbuildQualifier=${buildQualifier}</appArgLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

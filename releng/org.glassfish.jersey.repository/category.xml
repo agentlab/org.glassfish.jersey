@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Jersey Update Site" url="http://agentlab.ru/eclipse/update/org.glassfish.jersey">
+      Jersey Update Site
+   </description>
+   <feature id="org.glassfish.jersey.feature">
+      <category name="org.glassfish.jersey"/>
+   </feature>
+   <feature id="org.glassfish.jersey.feature.source">
+      <category name="org.glassfish.jersey"/>
+   </feature>
+   <category-def name="org.glassfish.jersey" label="Jersey 2.14.1"/>
+</site>

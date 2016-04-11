@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.glassfish.jersey</groupId>
+	<artifactId>org.glassfish.jersey.releng</artifactId>
+	<version>2.14.1-SNAPSHOT</version>
+	
+	<packaging>pom</packaging>
+	
+	<parent>
+		<groupId>ru.agentlab.orbit</groupId>
+		<artifactId>ru.agentlab.orbit.parent</artifactId>
+		<relativePath>../../../orbit-parent/ru.agentlab.orbit.parent/pom.xml</relativePath>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	
+	<modules>
+		<module>../org.glassfish.jersey.target</module>
+		
+		<module>../../plugins/org.glassfish.jersey.common</module>
+		<module>../../plugins/org.glassfish.jersey.client</module>
+		<module>../../plugins/org.glassfish.jersey.server</module>
+		
+		<module>../../plugins/org.glassfish.jersey.container.servlet.core</module>
+		<module>../../plugins/org.glassfish.jersey.container.servlet</module>
+		
+		<module>../../plugins/org.glassfish.jersey.media.json.jackson</module>
+		
+		<!--<module>../../tests/org.glassfish.jersey.api.tests</module>
+		<module>../../tests/org.glassfish.jersey.compatibility.tests</module>
+		<module>../../tests/org.glassfish.jersey.contract.tests</module>
+		<module>../../tests/org.glassfish.jersey.fixers.tests</module>
+		<module>../../tests/org.glassfish.jersey.impl.tests</module>
+		<module>../../tests/org.glassfish.jersey.oboformat.tests</module>
+		<module>../../tests/org.glassfish.jersey.parsers.tests</module>-->
+		
+		<module>../../features/org.glassfish.jersey.feature</module>
+		<module>../org.glassfish.jersey.repository</module>
+	</modules>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+                    <groupId>com.sun.istack</groupId>
+                    <artifactId>maven-istack-commons-plugin</artifactId>
+                    <version>2.6.1</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>rs-gen</goal>
+                            </goals>
+                            <configuration>
+                                <resources>
+                                    <directory>${basedir}/src/main/resources</directory>
+                                    <includes>
+                                        <include>**/localization.properties</include>
+                                    </includes>
+                                </resources>
+                                <destDir>${project.build.directory}/generated-sources/rsrc-gen</destDir>
+                                <localizationUtilitiesPkgName>org.glassfish.jersey.internal.l10n</localizationUtilitiesPkgName>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+				 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+				 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				 <plugin>
+				 	<groupId>org.eclipse.m2e</groupId>
+				 	<artifactId>lifecycle-mapping</artifactId>
+				 	<version>1.0.0</version>
+				 	<configuration>
+				 		<lifecycleMappingMetadata>
+				 			<pluginExecutions>
+				 				<pluginExecution>
+				 					<pluginExecutionFilter>
+				 						<groupId>
+				 							com.sun.istack
+				 						</groupId>
+				 						<artifactId>
+				 							maven-istack-commons-plugin
+				 						</artifactId>
+				 						<versionRange>
+				 							[2.6.1,3.0)
+				 						</versionRange>
+				 						<goals>
+				 							<goal>rs-gen</goal>
+				 						</goals>
+				 					</pluginExecutionFilter>
+				 					<action>
+				 						<execute/>
+				 					</action>
+				 				</pluginExecution>
+				 				<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.sun.tools.xjc.maven2
+										</groupId>
+										<artifactId>
+											maven-jaxb-plugin
+										</artifactId>
+										<versionRange>
+											[1.1.1,2.0)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute/>
+									</action>
+								</pluginExecution>
+				 			</pluginExecutions>
+				 		</lifecycleMappingMetadata>
+				 	</configuration>
+				 </plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>org.glassfish.jersey</groupId>
+							<artifactId>org.glassfish.jersey.target</artifactId>
+							<version>2.14.1-SNAPSHOT</version>
+						</artifact>
+					</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		
+	</build>
+
+</project>
