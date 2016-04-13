@@ -6,7 +6,6 @@ Bundle-License: http://glassfish.java.net/public/CDDL+GPL_1_1.html
 Bundle-SymbolicName: org.glassfish.jersey.server
 Bundle-Version: 2.14.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: javax.annotation;bundle-version="1.2.0";resolution:=optional
 Export-Package: com.sun.research.ws.wadl;version="2.14.1",
  org.glassfish.jersey.server;version="2.14.1",
  org.glassfish.jersey.server.filter;version="2.14.1",
@@ -35,6 +34,7 @@ Import-Package: com.google.common.base;version="[14.0.0,20.0.0)",
  com.google.common.collect;version="[14.0.0,20.0.0)",
  com.google.common.primitives;version="[14.0.0,20.0.0)",
  com.google.common.util.concurrent;version="[14.0.0,20.0.0)",
+ javax.annotation;version="1.2.0";resolution:=optional,
  javax.inject;version="1.0.0",
  javax.validation;version="1.0.0.GA",
  javax.ws.rs;version="[2.0.0,3.0.0)",
