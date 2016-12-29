@@ -30,3 +30,4 @@ workspace
 # Data Files #
 *.dat
 *.idn
+/releng/org.glassfish.jersey.target/org.glassfish.jersey.target.target
