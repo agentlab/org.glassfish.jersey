@@ -102,6 +102,8 @@
           name="org.glassfish.hk2.osgi-resource-locator"/>
       <requirement
           name="*"/>
+      <requirement
+          name="org.eclipse.ecf.remoteservice"/>
       <sourceLocator
           rootFolder="${org.glassfish.jersey.git.clone.location}"
           locateNestedProjects="true"/>
@@ -109,6 +111,8 @@
           name="Neon">
         <repository
             url="http://download.eclipse.org/releases/neon/201610111000"/>
+        <repository
+            url="http://download.eclipse.org/rt/ecf/latest/site.p2"/>
       </repositoryList>
     </targlet>
   </setupTask>
