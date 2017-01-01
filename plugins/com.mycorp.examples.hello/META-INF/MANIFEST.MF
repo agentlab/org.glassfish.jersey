@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hello
+Bundle-SymbolicName: com.mycorp.examples.hello
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: MYCORP
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.mycorp.examples.hello
