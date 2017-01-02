@@ -104,6 +104,10 @@
           name="*"/>
       <requirement
           name="org.eclipse.ecf.remoteservice"/>
+      <requirement
+          name="org.eclipse.ecf.osgi.services.remoteserviceadmin"/>
+      <requirement
+          name="org.eclipse.ecf.osgi.services.remoteserviceadmin.source"/>
       <sourceLocator
           rootFolder="${org.glassfish.jersey.git.clone.location}"
           locateNestedProjects="true"/>
