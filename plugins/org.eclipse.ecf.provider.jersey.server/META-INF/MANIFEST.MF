@@ -4,7 +4,7 @@ Bundle-Name: Jersey-Based Jax RS Server
 Bundle-SymbolicName: org.eclipse.ecf.provider.jersey.server
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse.org - ECF
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javassist;version="3.13.0.GA",
  javassist.bytecode;version="3.13.0.GA",
  javassist.bytecode.annotation;version="3.13.0.GA",

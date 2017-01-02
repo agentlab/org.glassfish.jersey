@@ -4,7 +4,7 @@ Bundle-Name: Jax-RS Server
 Bundle-SymbolicName: org.eclipse.ecf.provider.jaxrs.server
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse.org - ECF
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet;version="2.6.0",
  javax.ws.rs;version="2.0.1",
