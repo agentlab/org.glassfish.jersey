@@ -3,12 +3,11 @@
 
 <product name="Hello Example" uid="org.glassfish.jersey.product.product" id="org.eclipse.ecf.provider.jersey.server.product" version="1.0.0.0" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console -debug -clean  -configuration ./config -data ./data -user ./user
+      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console -debug -clean
       </programArgs>
       <vmArgs>-Xms40m -Xmx384m -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.eclipse.equinox.http.jetty.http.port=8080 -Declipse.log.level=ALL -Dlogback.configurationFile=logback.xml
       </vmArgs>
@@ -26,10 +25,8 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
