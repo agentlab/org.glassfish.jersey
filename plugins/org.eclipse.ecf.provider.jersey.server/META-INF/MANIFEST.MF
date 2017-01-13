@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jersey-Based Jax RS Server
-Bundle-SymbolicName: org.eclipse.ecf.provider.jersey.server
+Bundle-SymbolicName: org.eclipse.ecf.provider.jersey.server;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse.org - ECF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -44,11 +44,12 @@ public class HelloComponent
 //        this.pathParam = pathParam;
 //    }
 
-//	public String hello() {
-//		//System.out.println("received hello");
-//		return "Hello service host says 'Hi' back to WWWWWWWW";
-//	}
-//
+    @Override
+    public String hello() {
+        //System.out.println("received hello");
+        return "Hello service host says 'Hi' back to WWWWWWWW"; //$NON-NLS-1$
+    }
+
 //	public HelloMessage hello2() {
 //		return new HelloMessage("RRR", "EEE");
 //	}

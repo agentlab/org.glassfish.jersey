@@ -74,49 +74,101 @@
         </detail>
       </annotation>
       <requirement
-          name="javax.ws.rs"
-          versionRange="[2.0.1,2.1.0)"/>
+          name="*"/>
       <requirement
-          name="com.google.guava"/>
+          name="com.fasterxml.jackson.core.jackson-annotations"/>
       <requirement
-          name="javax.inject"/>
+          name="com.fasterxml.jackson.core.jackson-core"/>
+      <requirement
+          name="com.fasterxml.jackson.core.jackson-databind"/>
+      <requirement
+          name="com.fasterxml.jackson.datatype.jackson-datatype-guava"/>
+      <requirement
+          name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-base"/>
+      <requirement
+          name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider"/>
+      <requirement
+          name="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
+      <requirement
+          name="javassist"/>
       <requirement
           name="javax.annotation"/>
+      <requirement
+          name="javax.inject"/>
       <requirement
           name="javax.persistence"/>
       <requirement
           name="javax.validation"/>
       <requirement
-          name="javassist"/>
+          name="javax.ws.rs"
+          versionRange="[2.0.1,2.1.0)"/>
       <requirement
           name="org.aopalliance"/>
       <requirement
-          name="org.objectweb.asm"/>
+          name="org.apache.aries.spifly.dynamic.bundle"/>
+      <requirement
+          name="org.apache.aries.util"/>
+      <requirement
+          name="org.eclipse.core.runtime.feature.feature.group"/>
+      <requirement
+          name="org.eclipse.ecf.core.feature.group"/>
+      <requirement
+          name="org.eclipse.equinox.http.jetty"/>
+      <requirement
+          name="org.eclipse.equinox.http.servlet"/>
+      <requirement
+          name="org.eclipse.equinox.util"/>
+      <requirement
+          name="org.eclipse.jetty.continuation"/>
+      <requirement
+          name="org.eclipse.jetty.http"/>
+      <requirement
+          name="org.eclipse.jetty.io"/>
+      <requirement
+          name="org.eclipse.jetty.security"/>
+      <requirement
+          name="org.eclipse.jetty.server"/>
+      <requirement
+          name="org.eclipse.jetty.servlet"/>
+      <requirement
+          name="org.eclipse.jetty.util"/>
+      <requirement
+          name="org.eclipse.jetty.websocket.api"/>
+      <requirement
+          name="org.eclipse.jetty.websocket.client"/>
+      <requirement
+          name="org.eclipse.jetty.websocket.common"/>
+      <requirement
+          name="org.eclipse.jetty.websocket.server"/>
+      <requirement
+          name="org.eclipse.jetty.websocket.servlet"/>
       <requirement
           name="org.glassfish.hk2.api"/>
-      <requirement
-          name="org.glassfish.hk2.utils"/>
       <requirement
           name="org.glassfish.hk2.locator"/>
       <requirement
           name="org.glassfish.hk2.osgi-resource-locator"/>
       <requirement
-          name="*"/>
+          name="org.glassfish.hk2.utils"/>
       <requirement
-          name="org.eclipse.ecf.remoteservice"/>
+          name="org.objectweb.asm"/>
       <requirement
-          name="org.eclipse.ecf.osgi.services.remoteserviceadmin"/>
+          name="javax.validation.api"/>
       <requirement
-          name="org.eclipse.ecf.osgi.services.remoteserviceadmin.source"/>
+          name="org.json"/>
       <sourceLocator
           rootFolder="${org.glassfish.jersey.git.clone.location}"
           locateNestedProjects="true"/>
       <repositoryList
           name="Neon">
         <repository
-            url="http://download.eclipse.org/releases/neon/201610111000"/>
-        <repository
             url="http://download.eclipse.org/rt/ecf/latest/site.p2"/>
+        <repository
+            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.3.10.v20160621"/>
+        <repository
+            url="http://agentlab.ru/pd/p2/che/"/>
+        <repository
+            url="http://download.eclipse.org/releases/neon/201610111000"/>
       </repositoryList>
     </targlet>
   </setupTask>

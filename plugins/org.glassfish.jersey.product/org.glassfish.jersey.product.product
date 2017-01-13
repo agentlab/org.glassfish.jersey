@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Hello Example" uid="org.glassfish.jersey.product.product" id="org.eclipse.ecf.provider.jersey.server.product" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="Hello Example" uid="org.glassfish.jersey.product.product" id="org.eclipse.ecf.provider.jersey.server.product" version="1.0.0.0" useFeatures="false" includeLaunchers="true">
+
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console
+      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console -debug -clean  -configuration ./config -data ./data -user ./user
       </programArgs>
       <vmArgs>-Xms40m -Xmx384m -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.eclipse.equinox.http.jetty.http.port=8080 -Declipse.log.level=ALL -Dlogback.configurationFile=logback.xml
       </vmArgs>
@@ -17,6 +18,7 @@
 
    <windowImages/>
 
+
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -24,8 +26,10 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
@@ -34,8 +38,10 @@
       <plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
       <plugin id="com.fasterxml.jackson.core.jackson-core"/>
       <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
+      <plugin id="com.fasterxml.jackson.datatype.jackson-datatype-guava"/>
       <plugin id="com.fasterxml.jackson.jaxrs.jackson-jaxrs-base"/>
       <plugin id="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider"/>
+      <plugin id="com.fasterxml.jackson.module.jackson-module-jaxb-annotations"/>
       <plugin id="com.google.guava"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.mycorp.examples.hello"/>
@@ -46,6 +52,7 @@
       <plugin id="javax.persistence"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.validation"/>
+      <plugin id="javax.validation.api"/>
       <plugin id="javax.ws.rs"/>
       <plugin id="javax.xml"/>
       <plugin id="org.aopalliance"/>
@@ -58,11 +65,13 @@
       <plugin id="org.eclipse.ecf"/>
       <plugin id="org.eclipse.ecf.discovery"/>
       <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.osgi.services.distribution"/>
       <plugin id="org.eclipse.ecf.osgi.services.remoteserviceadmin"/>
       <plugin id="org.eclipse.ecf.osgi.services.remoteserviceadmin.proxy"/>
       <plugin id="org.eclipse.ecf.provider.jaxrs"/>
       <plugin id="org.eclipse.ecf.provider.jaxrs.server"/>
       <plugin id="org.eclipse.ecf.provider.jersey.server"/>
+      <plugin id="org.eclipse.ecf.provider.jmdns"/>
       <plugin id="org.eclipse.ecf.remoteservice"/>
       <plugin id="org.eclipse.ecf.remoteservice.asyncproxy"/>
       <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
@@ -120,6 +129,7 @@
       <plugin id="org.glassfish.jersey.container.servlet.core"/>
       <plugin id="org.glassfish.jersey.media.json.jackson"/>
       <plugin id="org.glassfish.jersey.server"/>
+      <plugin id="org.json"/>
       <plugin id="org.objectweb.asm"/>
       <plugin id="org.slf4j.api"/>
       <plugin id="org.slf4j.ext"/>
@@ -136,6 +146,7 @@
       <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.http.jetty" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
       <property name="org.eclipse.equinox.simpleconfigurator.configUrl" value="file\:./configuration/org.eclipse.equinox.simpleconfigurator/bundles.info" />
