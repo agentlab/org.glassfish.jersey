@@ -140,7 +140,7 @@ public class Parameter implements AnnotatedElement {
     }
 
     private static Map<Class, ParamAnnotationHelper> createParamAnnotationHelperMap() {
-        Map<Class, ParamAnnotationHelper> m = new WeakHashMap<Class, ParamAnnotationHelper>();
+        Map<Class, ParamAnnotationHelper> m = new WeakHashMap<>();
         m.put(Context.class, new ParamAnnotationHelper<Context>() {
 
             @Override
@@ -330,11 +330,17 @@ public class Parameter implements AnnotatedElement {
         ClassTypePair ct = ReflectionHelper.resolveGenericType(
                 concreteClass, declaringClass, rawType, type);
 
+        if (paramAnnotation == null && declaringClass.getMethods()[0].getName() == "postHello3") //$NON-NLS-1$
+        {
+            return new Parameter(annotations, paramAnnotation, Parameter.Source.PATH, "token", ct.rawClass(), ct.type(),
+                paramEncoded, paramDefault);
+        }
+
         return new Parameter(
                 annotations,
                 paramAnnotation,
-                paramSource,
-                paramName,
+            paramSource,
+            paramName,
                 ct.rawClass(),
                 ct.type(),
                 paramEncoded,
@@ -349,7 +355,7 @@ public class Parameter implements AnnotatedElement {
             Type[] genericParameterTypes,
             Annotation[][] parameterAnnotations) {
 
-        final List<Parameter> parameters = new ArrayList<Parameter>(parameterTypes.length);
+        final List<Parameter> parameters = new ArrayList<>(parameterTypes.length);
 
         for (int i = 0; i < parameterTypes.length; i++) {
             final Parameter parameter = Parameter.create(
@@ -422,6 +428,14 @@ public class Parameter implements AnnotatedElement {
             Class declaringClass,
             Method javaMethod,
             boolean keepEncoded) {
+
+//        for (Method m : clz.getDeclaredMethods()) {
+        System.err.println(javaMethod.getName());
+        for (java.lang.reflect.Parameter p : javaMethod.getParameters())
+        {
+            System.err.println("  " + p.getName());
+        }
+//         }
 
         AnnotatedMethod method = new AnnotatedMethod(javaMethod);
 
@@ -624,20 +638,49 @@ public class Parameter implements AnnotatedElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Parameter parameter = (Parameter) o;
 
-        if (encoded != parameter.encoded) return false;
-        if (!Arrays.equals(annotations, parameter.annotations)) return false;
-        if (defaultValue != null ? !defaultValue.equals(parameter.defaultValue) : parameter.defaultValue != null) return false;
-        if (rawType != null ? !rawType.equals(parameter.rawType) : parameter.rawType != null) return false;
-        if (source != parameter.source) return false;
-        if (sourceAnnotation != null ? !sourceAnnotation.equals(parameter.sourceAnnotation) : parameter.sourceAnnotation != null)
+        if (encoded != parameter.encoded)
+        {
             return false;
-        if (sourceName != null ? !sourceName.equals(parameter.sourceName) : parameter.sourceName != null) return false;
-        if (type != null ? !type.equals(parameter.type) : parameter.type != null) return false;
+        }
+        if (!Arrays.equals(annotations, parameter.annotations))
+        {
+            return false;
+        }
+        if (defaultValue != null ? !defaultValue.equals(parameter.defaultValue) : parameter.defaultValue != null)
+        {
+            return false;
+        }
+        if (rawType != null ? !rawType.equals(parameter.rawType) : parameter.rawType != null)
+        {
+            return false;
+        }
+        if (source != parameter.source)
+        {
+            return false;
+        }
+        if (sourceAnnotation != null ? !sourceAnnotation.equals(parameter.sourceAnnotation) : parameter.sourceAnnotation != null)
+        {
+            return false;
+        }
+        if (sourceName != null ? !sourceName.equals(parameter.sourceName) : parameter.sourceName != null)
+        {
+            return false;
+        }
+        if (type != null ? !type.equals(parameter.type) : parameter.type != null)
+        {
+            return false;
+        }
 
         return true;
     }

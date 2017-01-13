@@ -105,9 +105,10 @@ public class JerseyServerDistributionProvider
                     String serviceResourcePath;
                     String methodResourcePath;
                     String methodName;
+                    String pathParam;
 
                     //class
-                    serviceResourcePath = "/" + clazz.getSimpleName().toLowerCase();
+                    serviceResourcePath = "/" + clazz.getSimpleName().toLowerCase(); //$NON-NLS-1$
                     resourceBuilder.path(serviceResourcePath);
                     resourceBuilder.name(implClass.getName());
 
@@ -116,33 +117,69 @@ public class JerseyServerDistributionProvider
                     {
                         if (Modifier.isPublic(method.getModifiers()))
                         {
+                            pathParam = pathParam(method);
                             methodName = method.getName().toLowerCase();
-                            methodResourcePath = "/" + methodName;
+                            methodResourcePath = "/" + methodName; //$NON-NLS-1$
+
+                            if(pathParam != null)
+                            {
+                                methodResourcePath = methodResourcePath + pathParam;
+                            }
+
                             childResourceBuilder = resourceBuilder.addChildResource(methodResourcePath);
 
                             if (method.getAnnotation(Path.class) == null)
                             {
-                                if (method.getParameterCount() == 0)
+                                if (methodName.contains("get")) //$NON-NLS-1$
                                 {
-                                    methodBuilder = childResourceBuilder.addMethod("GET");
+                                    methodBuilder = childResourceBuilder.addMethod("GET"); //$NON-NLS-1$
                                 }
                                 else
                                 {
-                                    if (methodName.contains("delete"))
+                                    if (methodName.contains("delete")) //$NON-NLS-1$
                                     {
-                                        methodBuilder = childResourceBuilder.addMethod("DELETE");
+                                        methodBuilder = childResourceBuilder.addMethod("DELETE"); //$NON-NLS-1$
+                                    }
+                                    else if (methodName.contains("post")) //$NON-NLS-1$
+                                    {
+                                        methodBuilder = childResourceBuilder.addMethod("POST"); //$NON-NLS-1$
                                     }
                                     else
                                     {
-                                        methodBuilder = childResourceBuilder.addMethod("POST");
+                                        methodBuilder = childResourceBuilder.addMethod("PUT"); //$NON-NLS-1$
                                     }
-                                    methodBuilder.consumes(MediaType.APPLICATION_JSON);//APPLICATION_JSON)TEXT_PLAIN_TYPE
                                 }
+
                                 methodBuilder.produces(MediaType.APPLICATION_JSON)//APPLICATION_JSON)
                                     //.handledBy(implClass, method)
                                     .handledBy(registration.getService(), method).handlingMethod(method).extended(
                                         false);
+
                             }
+
+//                            if (method.getAnnotation(Path.class) == null)
+//                            {
+//                                if (methodName.contains("get"))
+//                                {
+//                                    methodBuilder = childResourceBuilder.addMethod("GET");
+//                                }
+//                                else
+//                                {
+//                                    if (methodName.contains("delete"))
+//                                    {
+//                                        methodBuilder = childResourceBuilder.addMethod("DELETE");
+//                                    }
+//                                    else
+//                                    {
+//                                        methodBuilder = childResourceBuilder.addMethod("POST");
+//                                    }
+//                                    methodBuilder.consumes(MediaType.APPLICATION_JSON);//APPLICATION_JSON)TEXT_PLAIN_TYPE
+//                                }
+//                                methodBuilder.produces(MediaType.APPLICATION_JSON)//APPLICATION_JSON)
+//                                    //.handledBy(implClass, method)
+//                                    .handledBy(registration.getService(), method).handlingMethod(method).extended(
+//                                        false);
+//                            }
                         }
                     }
                     final Resource resource = resourceBuilder.build();
@@ -155,6 +192,19 @@ public class JerseyServerDistributionProvider
         @Override
         protected HttpService getHttpService() {
             return getHttpServices().get(0);
+        }
+
+        protected String pathParam(Method method) {
+
+            StringBuilder strBuilder = new StringBuilder();
+
+            for (java.lang.reflect.Parameter p : method.getParameters())
+            {
+                strBuilder.append("/{").append(p.getName()).append("}");  //$NON-NLS-1$//$NON-NLS-2$
+            }
+
+            return strBuilder.toString().length() == 0 ? null : strBuilder.toString();
+
         }
     }
 }

@@ -3,8 +3,6 @@ package com.mycorp.examples.hello.ds.host;
 import java.io.IOException;
 import java.util.Dictionary;
 
-import javax.ws.rs.PathParam;
-
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -32,23 +30,23 @@ public class HelloComponent
 	public HelloComponent() {
 	}
 
-    public void setPathParam(String pathParam) {
-        this.pathParam = pathParam;
-    }
-
-    public String getPathParam() {
-        return pathParam;
-    }
+//    public void setPathParam(String pathParam) {
+//        this.pathParam = pathParam;
+//    }
+//
+//    public String getPathParam() {
+//        return pathParam;
+//    }
 
 //    public HelloComponent(@PathParam("token") String pathParam) {
 //        this.pathParam = pathParam;
 //    }
 
-    @Override
-    public String hello() {
-        //System.out.println("received hello");
-        return "Hello service host says 'Hi' back to WWWWWWWW"; //$NON-NLS-1$
-    }
+//    @Override
+//    public String hello() {
+//        //System.out.println("received hello");
+//        return "Hello service host says 'Hi' back to WWWWWWWW"; //$NON-NLS-1$
+//    }
 
 //	public HelloMessage hello2() {
 //		return new HelloMessage("RRR", "EEE");
@@ -57,7 +55,7 @@ public class HelloComponent
 //    @Path("/{token}")
 //    @PUT
     @Override
-    public String hello3(@PathParam("token") String token) {
+    public String postHello3(/*@PathParam("token")*/ String token) {
         System.err.println("received hello from=" + token);
         return "Hello " + token;
     }
