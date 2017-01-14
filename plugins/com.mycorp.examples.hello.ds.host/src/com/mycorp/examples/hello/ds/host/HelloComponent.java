@@ -57,9 +57,9 @@ public class HelloComponent
 //    @Path("/{token}")
 //    @PUT
     @Override
-    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol) {
+    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text) {
         System.err.println("received hello from=" + urltoken);
-        return "Hello " + urltoken + " " + urllol;
+        return "Hello " + urltoken + " " + urllol + " " + text;
     }
 
     @Activate

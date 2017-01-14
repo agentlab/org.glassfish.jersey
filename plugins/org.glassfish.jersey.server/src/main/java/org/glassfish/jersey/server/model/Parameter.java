@@ -479,14 +479,19 @@ public class Parameter implements AnnotatedElement {
         {
             if (p.getName().contains("url"))
             {
-//                Parameter.Source.PATH, "token"
-
                 PathParamInstance a = new PathParamInstance();
                 a.setValue(p.getName());
                 Annotation[] as = new PathParamInstance[1];
                 as[0] = a;
-                par = new Parameter(as, (Annotation)a, Parameter.Source.PATH,
-                        p.getName(), p.getType(), p.getType(), paramEncoded, null);
+                par = new Parameter(as, a, Parameter.Source.PATH,
+                    p.getName(), p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else
+            {
+                par = new Parameter(p.getAnnotations(), null, Parameter.Source.ENTITY, null, p.getType(),
+                    p.getType(), paramEncoded, null);
 
                 parList.add(par);
             }
