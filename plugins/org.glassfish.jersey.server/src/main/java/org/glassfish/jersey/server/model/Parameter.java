@@ -68,6 +68,7 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.server.model.annotaions.instance.HeaderParamInstance;
 import org.glassfish.jersey.server.model.annotaions.instance.PathParamInstance;
 
 /**
@@ -485,6 +486,22 @@ public class Parameter implements AnnotatedElement {
                 as[0] = a;
                 par = new Parameter(as, a, Parameter.Source.PATH,
                     p.getName(), p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else if (p.getName().contains("header"))
+            {
+                String header;
+                header = p.getName().substring("header".length()).toLowerCase(); //$NON-NLS-1$
+                header = header.replaceAll("_", "-"); //$NON-NLS-1$//$NON-NLS-2$
+
+                HeaderParamInstance a = new HeaderParamInstance();
+                a.setValue(header);
+                Annotation[] as = new HeaderParamInstance[1];
+                as[0] = a;
+
+                par =
+                    new Parameter(as, a, Parameter.Source.HEADER, header, p.getType(), p.getType(), paramEncoded, null);
 
                 parList.add(par);
             }

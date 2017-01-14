@@ -57,10 +57,12 @@ public class HelloComponent
 //    @Path("/{token}")
 //    @PUT
     @Override
-    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text) {
-        System.err.println("received hello from=" + urltoken);
-        return "Hello " + urltoken + " " + urllol + " " + text;
+    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text,
+        String headerIf_Match) {
+        System.err.println("received hello from=" + urltoken); //$NON-NLS-1$
+        return "Hello " + urltoken + " " + urllol + " " + text + " " + headerIf_Match;
     }
+
 
     @Activate
     public void activate(ComponentContext context) throws IOException {
@@ -88,4 +90,5 @@ public class HelloComponent
     public void updated(Dictionary<String, ?> properties) {
         System.out.println(properties);
     }
+
 }
