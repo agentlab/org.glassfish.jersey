@@ -19,7 +19,9 @@ import com.mycorp.examples.hello.IHello;
 
 //@Path("/api/blob")
 public class HelloComponent
-    implements IHello, ManagedService {
+    implements IHello
+    , ManagedService
+{
 	private String id;
     private String database;
     private String user;
@@ -55,9 +57,9 @@ public class HelloComponent
 //    @Path("/{token}")
 //    @PUT
     @Override
-    public String postHello3(/*@PathParam("token")*/ String token) {
-        System.err.println("received hello from=" + token);
-        return "Hello " + token;
+    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol) {
+        System.err.println("received hello from=" + urltoken);
+        return "Hello " + urltoken + " " + urllol;
     }
 
     @Activate

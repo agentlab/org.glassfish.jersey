@@ -156,30 +156,6 @@ public class JerseyServerDistributionProvider
                                         false);
 
                             }
-
-//                            if (method.getAnnotation(Path.class) == null)
-//                            {
-//                                if (methodName.contains("get"))
-//                                {
-//                                    methodBuilder = childResourceBuilder.addMethod("GET");
-//                                }
-//                                else
-//                                {
-//                                    if (methodName.contains("delete"))
-//                                    {
-//                                        methodBuilder = childResourceBuilder.addMethod("DELETE");
-//                                    }
-//                                    else
-//                                    {
-//                                        methodBuilder = childResourceBuilder.addMethod("POST");
-//                                    }
-//                                    methodBuilder.consumes(MediaType.APPLICATION_JSON);//APPLICATION_JSON)TEXT_PLAIN_TYPE
-//                                }
-//                                methodBuilder.produces(MediaType.APPLICATION_JSON)//APPLICATION_JSON)
-//                                    //.handledBy(implClass, method)
-//                                    .handledBy(registration.getService(), method).handlingMethod(method).extended(
-//                                        false);
-//                            }
                         }
                     }
                     final Resource resource = resourceBuilder.build();
@@ -200,7 +176,10 @@ public class JerseyServerDistributionProvider
 
             for (java.lang.reflect.Parameter p : method.getParameters())
             {
-                strBuilder.append("/{").append(p.getName()).append("}");  //$NON-NLS-1$//$NON-NLS-2$
+                if (p.getName().contains("url"))
+                 {
+                    strBuilder.append("/{").append(p.getName()).append("}");  //$NON-NLS-1$//$NON-NLS-2$
+                }
             }
 
             return strBuilder.toString().length() == 0 ? null : strBuilder.toString();

@@ -68,6 +68,7 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.server.model.annotaions.instance.PathParamInstance;
 
 /**
  * Method parameter model.
@@ -330,11 +331,11 @@ public class Parameter implements AnnotatedElement {
         ClassTypePair ct = ReflectionHelper.resolveGenericType(
                 concreteClass, declaringClass, rawType, type);
 
-        if (paramAnnotation == null && declaringClass.getMethods()[0].getName() == "postHello3") //$NON-NLS-1$
-        {
-            return new Parameter(annotations, paramAnnotation, Parameter.Source.PATH, "token", ct.rawClass(), ct.type(),
-                paramEncoded, paramDefault);
-        }
+//        if (paramAnnotation == null && declaringClass.getMethods()[0].getName() == "postHello3") //$NON-NLS-1$
+//        {
+//            return new Parameter(annotations, paramAnnotation, Parameter.Source.PATH, "urltoken", ct.rawClass(),
+//                ct.type(), paramEncoded, paramDefault);
+//        }
 
         return new Parameter(
                 annotations,
@@ -375,6 +376,7 @@ public class Parameter implements AnnotatedElement {
 
         return parameters;
     }
+
 
     /**
      * Create a list of parameter models for a given resource method handler
@@ -439,12 +441,58 @@ public class Parameter implements AnnotatedElement {
 
         AnnotatedMethod method = new AnnotatedMethod(javaMethod);
 
+        boolean notParamAnnotations = true;
+
+        for (int i = 0; i < method.getParameterAnnotations().length; i++)
+        {
+            if (method.getParameterAnnotations()[0].length != 0)
+            {
+                notParamAnnotations = false;
+            }
+        }
+
+        if (method.getAnnotations().length == 0 && notParamAnnotations)
+        {
+            if (javaMethod.getName().contains("get") || javaMethod.getName().contains("post")
+                || javaMethod.getName().contains("delete") || javaMethod.getName().contains("put"))
+            {
+                return createWithoutAnnotations(javaMethod,
+                    ((null != method.getAnnotation(Encoded.class)) || keepEncoded));
+            }
+        }
+
         return create(
                 concreteClass, declaringClass,
                 ((null != method.getAnnotation(Encoded.class)) || keepEncoded),
                 method.getParameterTypes(),
                 method.getGenericParameterTypes(),
                 method.getParameterAnnotations());
+    }
+
+    private static List<Parameter> createWithoutAnnotations(Method method, boolean paramEncoded) {
+
+        List<Parameter> parList = new ArrayList<>();
+
+        Parameter par = null;
+
+        for (java.lang.reflect.Parameter p : method.getParameters())
+        {
+            if (p.getName().contains("url"))
+            {
+//                Parameter.Source.PATH, "token"
+
+                PathParamInstance a = new PathParamInstance();
+                a.setValue(p.getName());
+                Annotation[] as = new PathParamInstance[1];
+                as[0] = a;
+                par = new Parameter(as, (Annotation)a, Parameter.Source.PATH,
+                        p.getName(), p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+        }
+
+        return parList;
     }
 
     /**
