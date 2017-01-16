@@ -29,13 +29,15 @@ import org.osgi.service.http.HttpService;
 public class JerseyServerDistributionProvider
     extends JaxRSServerDistributionProvider {
 
-    public static final String JERSEY_SERVER_CONFIG_NAME = "ecf.jaxrs.jersey.server";
+    public static final String JERSEY_SERVER_CONFIG_NAME = "ecf.jaxrs.jersey.server"; //$NON-NLS-1$
 
-    public static final String URL_CONTEXT_PARAM = "urlContext";
+    public static final String URL_CONTEXT_PARAM = "urlContext"; //$NON-NLS-1$
     public static final String URL_CONTEXT_DEFAULT =
-        System.getProperty(JerseyServerContainer.class.getName() + ".defaultUrlContext", "http://localhost:8080");
-    public static final String ALIAS_PARAM = "alias";
-    public static final String ALIAS_PARAM_DEFAULT = "/org.eclipse.ecf.provider.jersey.server";
+        System.getProperty(JerseyServerContainer.class.getName() + ".defaultUrlContext", "http://localhost:8080"); //$NON-NLS-1$ //$NON-NLS-2$
+    public static final String ALIAS_PARAM = "alias"; //$NON-NLS-1$
+    public static final String ALIAS_PARAM_DEFAULT = "/org.eclipse.ecf.provider.jersey.server"; //$NON-NLS-1$
+    public static final String SERVICE_ALIAS_PARAM = "ecf.jaxrs.jersey.server.service.alias"; //$NON-NLS-1$
+//    public static final String SERVICE_ALIAS_PARAM_DEFAULT = ""; //$NON-NLS-1$
 
     public JerseyServerDistributionProvider() {
         super();
@@ -50,6 +52,7 @@ public class JerseyServerDistributionProvider
                 Configuration configuration) {
                 String urlContext = getParameterValue(parameters, URL_CONTEXT_PARAM, URL_CONTEXT_DEFAULT);
                 String alias = getParameterValue(parameters, ALIAS_PARAM, ALIAS_PARAM_DEFAULT);
+//                String serviceAliace = getParameterValue(parameters, SERVICE_ALIAS_PARAM, SERVICE_ALIAS_PARAM_DEFAULT);
                 return new JerseyServerContainer(urlContext, alias,
                     (ResourceConfig)((configuration instanceof ResourceConfig) ? configuration : null));
             }
@@ -63,9 +66,13 @@ public class JerseyServerDistributionProvider
 
         private ResourceConfig configuration;
 
-        public JerseyServerContainer(String urlContext, String alias, ResourceConfig configuration) {
+//        private String serviceAliace;
+
+        public JerseyServerContainer(String urlContext, String alias,
+            ResourceConfig configuration) {
             super(urlContext, alias);
             this.configuration = configuration;
+//            this.serviceAliace = serviceAliace;
         }
 
         protected ResourceConfig createResourceConfig(final RSARemoteServiceRegistration registration) {
@@ -107,9 +114,18 @@ public class JerseyServerDistributionProvider
                     String methodResourcePath;
                     String methodName;
                     String pathParam;
+                    String serviceAliace =
+                        (String)registration.getProperty(JerseyServerDistributionProvider.SERVICE_ALIAS_PARAM);
 
                     //class
-                    serviceResourcePath = buildServicePath(clazz.getSimpleName());
+                    if (serviceAliace != null && !serviceAliace.equals(""))
+                    {
+                        serviceResourcePath = serviceAliace;
+                    }
+                    else
+                    {
+                        serviceResourcePath = buildServicePath(clazz.getSimpleName());
+                    }
                     resourceBuilder.path(serviceResourcePath);
                     resourceBuilder.name(implClass.getName());
 
@@ -184,7 +200,6 @@ public class JerseyServerDistributionProvider
         }
 
         protected String pathParam(Method method) {
-
             StringBuilder strBuilder = new StringBuilder();
 
             for (java.lang.reflect.Parameter p : method.getParameters())
@@ -196,7 +211,6 @@ public class JerseyServerDistributionProvider
             }
 
             return strBuilder.toString().length() == 0 ? null : strBuilder.toString();
-
         }
 
         protected String buildServicePath(String simpleClassName) {
