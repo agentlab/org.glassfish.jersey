@@ -17,7 +17,6 @@
 
    <windowImages/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -53,11 +52,16 @@
       <plugin id="javax.ws.rs"/>
       <plugin id="javax.xml"/>
       <plugin id="org.aopalliance"/>
+      <plugin id="org.apache.commons.codec"/>
+      <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.felix.gogo.command"/>
       <plugin id="org.apache.felix.gogo.runtime"/>
       <plugin id="org.apache.felix.gogo.shell"/>
+      <plugin id="org.apache.httpcomponents.httpclient"/>
+      <plugin id="org.apache.httpcomponents.httpcore"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.net"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.ecf"/>
       <plugin id="org.eclipse.ecf.discovery"/>
@@ -100,6 +104,10 @@
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.region" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.security"/>
+      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator"/>
       <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.useradmin"/>
@@ -116,6 +124,11 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.services.remoteserviceadmin"/>
       <plugin id="org.eclipse.osgi.util"/>
+      <plugin id="org.eclipse.userstorage"/>
+      <plugin id="org.eclipse.userstorage.service"/>
+      <plugin id="org.eclipse.userstorage.service.host"/>
+      <plugin id="org.eclipse.userstorage.service.model"/>
+      <plugin id="org.eclipse.userstorage.tests"/>
       <plugin id="org.glassfish.hk2.api"/>
       <plugin id="org.glassfish.hk2.locator"/>
       <plugin id="org.glassfish.hk2.osgi-resource-locator"/>
@@ -126,8 +139,11 @@
       <plugin id="org.glassfish.jersey.container.servlet.core"/>
       <plugin id="org.glassfish.jersey.media.json.jackson"/>
       <plugin id="org.glassfish.jersey.server"/>
+      <plugin id="org.hamcrest.core"/>
       <plugin id="org.json"/>
+      <plugin id="org.junit"/>
       <plugin id="org.objectweb.asm"/>
+      <plugin id="org.objectweb.asm.all.debug"/>
       <plugin id="org.slf4j.api"/>
       <plugin id="org.slf4j.ext"/>
       <plugin id="org.slf4j.jcl"/>

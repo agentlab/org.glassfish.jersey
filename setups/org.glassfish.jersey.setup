@@ -156,6 +156,8 @@
           name="javax.validation.api"/>
       <requirement
           name="org.json"/>
+      <requirement
+          name="org.eclipse.core.net"/>
       <sourceLocator
           rootFolder="${org.glassfish.jersey.git.clone.location}"
           locateNestedProjects="true"/>

@@ -59,6 +59,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -454,8 +455,10 @@ public class Parameter implements AnnotatedElement {
 
         if (method.getAnnotations().length == 0 && notParamAnnotations)
         {
-            if (javaMethod.getName().contains("get") || javaMethod.getName().contains("post")
-                || javaMethod.getName().contains("delete") || javaMethod.getName().contains("put"))
+            if (javaMethod.getName().startsWith(HttpMethod.GET.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.POST.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.DELETE.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.PUT.toLowerCase()))
             {
                 return createWithoutAnnotations(javaMethod,
                     ((null != method.getAnnotation(Encoded.class)) || keepEncoded));
@@ -478,7 +481,7 @@ public class Parameter implements AnnotatedElement {
 
         for (java.lang.reflect.Parameter p : method.getParameters())
         {
-            if (p.getName().contains("url"))
+            if (p.getName().startsWith("url")) //$NON-NLS-1$
             {
                 PathParamInstance a = new PathParamInstance();
                 a.setValue(p.getName());
@@ -489,11 +492,11 @@ public class Parameter implements AnnotatedElement {
 
                 parList.add(par);
             }
-            else if (p.getName().contains("header"))
+            else if (p.getName().startsWith("header")) //$NON-NLS-1$
             {
-                String header;
-                header = p.getName().substring("header".length()).toLowerCase(); //$NON-NLS-1$
-                header = header.replaceAll("_", "-"); //$NON-NLS-1$//$NON-NLS-2$
+                String header = createHeaderName(p.getName());
+//                header = p.getName().substring("header".length()).toLowerCase(); //$NON-NLS-1$
+//                header = header.replaceAll("_", "-"); //$NON-NLS-1$//$NON-NLS-2$
 
                 HeaderParamInstance a = new HeaderParamInstance();
                 a.setValue(header);
@@ -515,6 +518,29 @@ public class Parameter implements AnnotatedElement {
         }
 
         return parList;
+    }
+
+    private static String createHeaderName(String header) {
+
+        header = header.substring("header".length()); //$NON-NLS-1$
+
+        String[] partsOfHeader = header.split("(?=\\p{Lu})"); //$NON-NLS-1$
+
+        header = ""; //$NON-NLS-1$
+
+        for (int i = 0; i < partsOfHeader.length; i++)
+        {
+
+            header = header + partsOfHeader[i].toLowerCase();
+
+            if (i % 2 == 0 && i + 1 != partsOfHeader.length)
+            {
+                header = header + "-"; //$NON-NLS-1$
+            }
+
+        }
+
+        return header;
     }
 
     /**

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.Servlet;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Configuration;
@@ -108,7 +109,7 @@ public class JerseyServerDistributionProvider
                     String pathParam;
 
                     //class
-                    serviceResourcePath = "/" + clazz.getSimpleName().toLowerCase(); //$NON-NLS-1$
+                    serviceResourcePath = buildServicePath(clazz.getSimpleName());
                     resourceBuilder.path(serviceResourcePath);
                     resourceBuilder.name(implClass.getName());
 
@@ -119,12 +120,24 @@ public class JerseyServerDistributionProvider
                         {
                             pathParam = pathParam(method);
                             methodName = method.getName().toLowerCase();
-                            methodResourcePath = "/" + methodName; //$NON-NLS-1$
 
-                            if(pathParam != null)
+                            methodResourcePath = buildMethodPath(methodName);
+                            if (pathParam != null)
                             {
-                                methodResourcePath = methodResourcePath + pathParam;
+//                                if (methodResourcePath.equals("/")) //$NON-NLS-1$
+//                                {
+//                                    methodResourcePath = pathParam;
+//                                }
+//                                else
+//                                {
+//                                    methodResourcePath = methodResourcePath + pathParam;
+//                                }
+
+                                methodResourcePath =
+                                    methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam;
                             }
+
+
 
                             childResourceBuilder = resourceBuilder.addChildResource(methodResourcePath);
 
@@ -176,7 +189,7 @@ public class JerseyServerDistributionProvider
 
             for (java.lang.reflect.Parameter p : method.getParameters())
             {
-                if (p.getName().contains("url"))
+                if (p.getName().startsWith("url")) //$NON-NLS-1$
                  {
                     strBuilder.append("/{").append(p.getName()).append("}");  //$NON-NLS-1$//$NON-NLS-2$
                 }
@@ -184,6 +197,56 @@ public class JerseyServerDistributionProvider
 
             return strBuilder.toString().length() == 0 ? null : strBuilder.toString();
 
+        }
+
+        protected String buildServicePath(String simpleClassName) {
+            StringBuilder servicePath = new StringBuilder();
+
+            String[] partsOfPath;
+
+            servicePath.append("/"); //$NON-NLS-1$
+            if (!simpleClassName.startsWith("I")) //$NON-NLS-1$
+            {
+                return simpleClassName.toLowerCase();
+            }
+
+            simpleClassName = simpleClassName.substring(1);
+
+            if (simpleClassName.endsWith("Service")) //$NON-NLS-1$
+            {
+                simpleClassName = simpleClassName.substring(0, simpleClassName.length() - "Service".length()); //$NON-NLS-1$
+            }
+
+            partsOfPath = simpleClassName.split("(?=\\p{Lu})"); //$NON-NLS-1$
+            for (String parts : partsOfPath)
+            {
+                servicePath.append(parts.toLowerCase() + "/"); //$NON-NLS-1$
+            }
+
+            servicePath.deleteCharAt(servicePath.length() - 1); // remove last '/'
+
+            return servicePath.toString();
+        }
+
+        protected String buildMethodPath(String methodName) {
+            if (methodName.startsWith(HttpMethod.GET.toLowerCase()))
+            {
+                methodName = methodName.substring(HttpMethod.GET.length());
+            }
+            else if (methodName.startsWith(HttpMethod.POST.toLowerCase()))
+            {
+                methodName = methodName.substring(HttpMethod.POST.length());
+            }
+            else if (methodName.startsWith(HttpMethod.DELETE.toLowerCase()))
+            {
+                methodName = methodName.substring(HttpMethod.DELETE.length());
+            }
+            else if (methodName.startsWith(HttpMethod.PUT.toLowerCase()))
+            {
+                methodName = methodName.substring(HttpMethod.PUT.length());
+            }
+
+            return methodName == "" ? "/" : "/" + methodName.toLowerCase();
         }
     }
 }

@@ -13,7 +13,7 @@ public interface IHello {
 
 //    public String hello2();
 
-    public String postHello3(String urltoken, String urllol, String text, String headerIf_Match);
+    public String postHello3(String urlToken, String urlLol, String text, String headerIfMatch);
 
 
 //    public HelloMessage hello4(HelloMessage message);
