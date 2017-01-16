@@ -71,6 +71,7 @@ import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.Uri;
 import org.glassfish.jersey.server.model.annotaions.instance.HeaderParamInstance;
 import org.glassfish.jersey.server.model.annotaions.instance.PathParamInstance;
+import org.glassfish.jersey.server.model.annotaions.instance.QueryParamInstance;
 
 /**
  * Method parameter model.
@@ -508,6 +509,18 @@ public class Parameter implements AnnotatedElement {
 
                 parList.add(par);
             }
+            else if (p.getName().startsWith("query"))
+            {
+                String query = createQueryName(p.getName());
+                QueryParamInstance q = new QueryParamInstance();
+                q.setValue(query);
+                Annotation[] as = new QueryParamInstance[1];
+                as[0] = q;
+
+                par = new Parameter(as, q, Parameter.Source.QUERY, query, p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
             else
             {
                 par = new Parameter(p.getAnnotations(), null, Parameter.Source.ENTITY, null, p.getType(),
@@ -518,6 +531,12 @@ public class Parameter implements AnnotatedElement {
         }
 
         return parList;
+    }
+
+    private static String createQueryName(String query) {
+        query = query.substring("query".length());
+        query = Character.toLowerCase(query.charAt(0)) + query.substring(1);
+        return query;
     }
 
     private static String createHeaderName(String header) {

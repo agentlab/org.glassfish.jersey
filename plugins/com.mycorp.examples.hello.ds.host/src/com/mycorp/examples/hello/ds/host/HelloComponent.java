@@ -57,8 +57,8 @@ public class HelloComponent
 //    @Path("/{token}")
 //    @PUT
     @Override
-    public String postHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text,
-        String headerIf_Match) {
+    public String getHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text,
+        String headerIf_Match, String queryPageSize) {
         System.err.println("received hello from=" + urltoken); //$NON-NLS-1$
         return "Hello " + urltoken + " " + urllol + " " + text + " " + headerIf_Match;
     }
