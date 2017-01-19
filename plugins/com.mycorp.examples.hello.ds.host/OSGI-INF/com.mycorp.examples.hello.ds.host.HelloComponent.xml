@@ -3,7 +3,7 @@
    <property name="service.exported.interfaces" value="*"/>
    <property name="service.exported.configs" value="ecf.jaxrs.jersey.server"/>
    <property name="ecf.jaxrs.jersey.server.urlContext" value="http://localhost:8080"/>
-   <property name="ecf.jaxrs.jersey.server.alias" value="/hello"/>
+   <property name="ecf.jaxrs.jersey.server.alias" value="/helloo"/>
    <property name="service.pid" value="com.mycorp.examples.hello.ds.host.HelloComponent"/>
    <service>
       <provide interface="com.mycorp.examples.hello.IHello"/>

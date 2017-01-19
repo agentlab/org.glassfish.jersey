@@ -2,6 +2,7 @@ package org.eclipse.ecf.provider.jersey.server;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +38,11 @@ public class JerseyServerDistributionProvider
     public static final String ALIAS_PARAM = "alias"; //$NON-NLS-1$
     public static final String ALIAS_PARAM_DEFAULT = "/org.eclipse.ecf.provider.jersey.server"; //$NON-NLS-1$
     public static final String SERVICE_ALIAS_PARAM = "ecf.jaxrs.jersey.server.service.alias"; //$NON-NLS-1$
+    public static final String SERVER_ALIAS_PARAM = "ecf.jaxrs.jersey.server.alias"; //$NON-NLS-1$
 //    public static final String SERVICE_ALIAS_PARAM_DEFAULT = ""; //$NON-NLS-1$
+    private static final Map<String, ServletContainer> aliasToServlet = new HashMap<>();
+
+    private static final Map<String, Set<Resource>> aliasToSetResources = new HashMap<>();
 
     public JerseyServerDistributionProvider() {
         super();
@@ -57,7 +62,7 @@ public class JerseyServerDistributionProvider
                     (ResourceConfig)((configuration instanceof ResourceConfig) ? configuration : null));
             }
         });
-        setDescription("Jersey Jax-RS Server Provider");
+        setDescription("Jersey Jax-RS Server Provider"); //$NON-NLS-1$
         setServer(true);
     }
 
@@ -103,6 +108,8 @@ public class JerseyServerDistributionProvider
             ResourceConfig rc = createResourceConfig(registration);
 
             Class<?> implClass = registration.getService().getClass();
+            String serverAlias = (String)registration.getProperty(SERVER_ALIAS_PARAM);
+
             for (Class<?> clazz : implClass.getInterfaces())
             {
                 if (clazz.getAnnotation(Path.class) == null)
@@ -118,7 +125,7 @@ public class JerseyServerDistributionProvider
                         (String)registration.getProperty(JerseyServerDistributionProvider.SERVICE_ALIAS_PARAM);
 
                     //class
-                    if (serviceAliace != null && !serviceAliace.equals(""))
+                    if (serviceAliace != null && !serviceAliace.equals("")) //$NON-NLS-1$
                     {
                         serviceResourcePath = serviceAliace;
                     }
@@ -150,7 +157,7 @@ public class JerseyServerDistributionProvider
 //                                }
 
                                 methodResourcePath =
-                                    methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam;
+                                    methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam; //$NON-NLS-1$
                             }
 
 
@@ -188,15 +195,71 @@ public class JerseyServerDistributionProvider
                         }
                     }
                     final Resource resource = resourceBuilder.build();
-                    rc.registerResources(resource);
+
+                    saveResourceByAlias(serverAlias, resource);
+
+//                    if (serverAlias != null && modifyServletContainer(serverAlias, resource) != null)
+//                    {
+//                        return null;
+//                    }
+
+//                    rc.registerResources(resource);
+
+                    Resource[] r = new Resource[aliasToSetResources.get(serverAlias).size()];
+
+                    for (int i = 0; i < r.length; i++)
+                    {
+                        r[i] = aliasToSetResources.get(serverAlias).iterator().next();
+                    }
+
+                    rc.registerResources(r);
                 }
             }
+
+//            ServletContainer servlet = (rc != null) ? new ServletContainer(rc) : new ServletContainer();
+
+//            if (serverAlias != null)
+//            {
+//                aliasToServlet.put(serverAlias, servlet);
+//            }
+
             return (rc != null) ? new ServletContainer(rc) : new ServletContainer();
         }
 
         @Override
         protected HttpService getHttpService() {
             return getHttpServices().get(0);
+        }
+
+        protected ServletContainer modifyServletContainer(String alias, Resource resource) {
+
+            ServletContainer servlet = null;
+
+            if ((servlet = aliasToServlet.get(alias)) != null)
+            {
+                Set<Resource> resources = servlet.getConfiguration().getResources();
+                if (!resources.contains(resource))
+                {
+                    resources.add(resource);
+                    return servlet;
+                }
+            }
+
+            return servlet;
+        }
+
+        protected void saveResourceByAlias(String alias, Resource resource) {
+            if (!aliasToSetResources.containsKey(alias))
+            {
+                Set<Resource> resources = new HashSet<>();
+                resources.add(resource);
+                aliasToSetResources.put(alias, resources);
+            }
+            else
+            {
+                Set<Resource> resources = aliasToSetResources.get(alias);
+                resources.add(resource);
+            }
         }
 
         protected String pathParam(Method method) {
@@ -260,7 +323,7 @@ public class JerseyServerDistributionProvider
                 methodName = methodName.substring(HttpMethod.PUT.length());
             }
 
-            return methodName == "" ? "/" : "/" + methodName.toLowerCase();
+            return methodName == "" ? "/" : "/" + methodName.toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
     }
 }

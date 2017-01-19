@@ -14,7 +14,7 @@ import com.mycorp.examples.hello.IHello;
 
 @Component(enabled = true, immediate = true,
     property = { "service.exported.interfaces=*", "service.exported.configs=ecf.jaxrs.jersey.server",
-        "ecf.jaxrs.jersey.server.urlContext=http://localhost:8080", "ecf.jaxrs.jersey.server.alias=/hello",
+        "ecf.jaxrs.jersey.server.urlContext=http://localhost:8080", "ecf.jaxrs.jersey.server.alias=/helloo",
         "service.pid=com.mycorp.examples.hello.ds.host.HelloComponent" })
 
 //@Path("/api/blob")
@@ -60,7 +60,7 @@ public class HelloComponent
     public String getHello3(/*@PathParam("token")*/ String urltoken, String urllol, String text,
         String headerIf_Match, String queryPageSize) {
         System.err.println("received hello from=" + urltoken); //$NON-NLS-1$
-        return "Hello " + urltoken + " " + urllol + " " + text + " " + headerIf_Match;
+        return "Hello " + urltoken + " " + urllol + " " + text + " " + headerIf_Match; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
 
@@ -68,22 +68,22 @@ public class HelloComponent
     public void activate(ComponentContext context) throws IOException {
         Dictionary<String, Object> properties = context.getProperties();
         //properties.put("database.id", "wewe");
-        id = (String)properties.get("database.id");
-        database = (String)properties.get("database");
-        user = (String)properties.get("user");
-        password = (String)properties.get("password");
-        create = (String)properties.get("create");
-        System.err.println("Hello service started");
+        id = (String)properties.get("database.id"); //$NON-NLS-1$
+        database = (String)properties.get("database"); //$NON-NLS-1$
+        user = (String)properties.get("user"); //$NON-NLS-1$
+        password = (String)properties.get("password"); //$NON-NLS-1$
+        create = (String)properties.get("create"); //$NON-NLS-1$
+        System.err.println("Hello service started"); //$NON-NLS-1$
     }
 
     @Deactivate
     public void deactivate(ComponentContext context) {
-        System.out.println("Hello service stopped");
+        System.out.println("Hello service stopped"); //$NON-NLS-1$
     }
 
     @Modified
     public void modify() {
-        System.out.println("Hello service modified");
+        System.out.println("Hello service modified"); //$NON-NLS-1$
 	}
 
     @Override

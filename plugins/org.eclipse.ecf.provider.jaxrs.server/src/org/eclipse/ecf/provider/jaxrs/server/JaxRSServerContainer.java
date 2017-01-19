@@ -10,7 +10,9 @@
 package org.eclipse.ecf.provider.jaxrs.server;
 
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -41,6 +43,8 @@ public abstract class JaxRSServerContainer
 
     private final String urlContext;
     private final String alias;
+
+    private static Set<String> aliases = new HashSet<>();
 
     public JaxRSServerContainer(String urlContext, String alias) {
         super(JaxRSNamespace.INSTANCE.createInstance(new Object[] { urlContext + alias }));
@@ -140,7 +144,16 @@ public abstract class JaxRSServerContainer
 
         try
         {
-            getHttpService().registerServlet(servletAlias, servlet, servletProps, servletContext);
+            if (aliases.contains(servletAlias))
+            {
+                getHttpService().unregister(servletAlias);
+                getHttpService().registerServlet(servletAlias, servlet, servletProps, servletContext);
+            }
+            else
+            {
+                aliases.add(servletAlias);
+                getHttpService().registerServlet(servletAlias, servlet, servletProps, servletContext);
+            }
         }
         catch (ServletException | NamespaceException e)
         {

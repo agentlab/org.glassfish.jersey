@@ -158,6 +158,9 @@
           name="org.json"/>
       <requirement
           name="org.eclipse.core.net"/>
+      <requirement
+          name="org.apache.httpcomponents.httpclient"
+          versionRange="4.3.6.v201511171540"/>
       <sourceLocator
           rootFolder="${org.glassfish.jersey.git.clone.location}"
           locateNestedProjects="true"/>
