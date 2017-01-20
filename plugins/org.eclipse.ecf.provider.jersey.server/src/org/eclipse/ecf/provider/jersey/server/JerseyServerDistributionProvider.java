@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,8 +40,6 @@ public class JerseyServerDistributionProvider
     public static final String ALIAS_PARAM_DEFAULT = "/org.eclipse.ecf.provider.jersey.server"; //$NON-NLS-1$
     public static final String SERVICE_ALIAS_PARAM = "ecf.jaxrs.jersey.server.service.alias"; //$NON-NLS-1$
     public static final String SERVER_ALIAS_PARAM = "ecf.jaxrs.jersey.server.alias"; //$NON-NLS-1$
-//    public static final String SERVICE_ALIAS_PARAM_DEFAULT = ""; //$NON-NLS-1$
-    private static final Map<String, ServletContainer> aliasToServlet = new HashMap<>();
 
     private static final Map<String, Set<Resource>> aliasToSetResources = new HashMap<>();
 
@@ -71,13 +70,10 @@ public class JerseyServerDistributionProvider
 
         private ResourceConfig configuration;
 
-//        private String serviceAliace;
-
         public JerseyServerContainer(String urlContext, String alias,
             ResourceConfig configuration) {
             super(urlContext, alias);
             this.configuration = configuration;
-//            this.serviceAliace = serviceAliace;
         }
 
         protected ResourceConfig createResourceConfig(final RSARemoteServiceRegistration registration) {
@@ -147,15 +143,6 @@ public class JerseyServerDistributionProvider
                             methodResourcePath = buildMethodPath(methodName);
                             if (pathParam != null)
                             {
-//                                if (methodResourcePath.equals("/")) //$NON-NLS-1$
-//                                {
-//                                    methodResourcePath = pathParam;
-//                                }
-//                                else
-//                                {
-//                                    methodResourcePath = methodResourcePath + pathParam;
-//                                }
-
                                 methodResourcePath =
                                     methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam; //$NON-NLS-1$
                             }
@@ -197,31 +184,12 @@ public class JerseyServerDistributionProvider
                     final Resource resource = resourceBuilder.build();
 
                     saveResourceByAlias(serverAlias, resource);
-
-//                    if (serverAlias != null && modifyServletContainer(serverAlias, resource) != null)
-//                    {
-//                        return null;
-//                    }
-
-//                    rc.registerResources(resource);
-
-                    Resource[] r = new Resource[aliasToSetResources.get(serverAlias).size()];
-
-                    for (int i = 0; i < r.length; i++)
-                    {
-                        r[i] = aliasToSetResources.get(serverAlias).iterator().next();
-                    }
-
-                    rc.registerResources(r);
                 }
             }
 
-//            ServletContainer servlet = (rc != null) ? new ServletContainer(rc) : new ServletContainer();
+            Resource[] resources = getResourcesByServerAilas(serverAlias);
 
-//            if (serverAlias != null)
-//            {
-//                aliasToServlet.put(serverAlias, servlet);
-//            }
+            rc.registerResources(resources);
 
             return (rc != null) ? new ServletContainer(rc) : new ServletContainer();
         }
@@ -231,21 +199,20 @@ public class JerseyServerDistributionProvider
             return getHttpServices().get(0);
         }
 
-        protected ServletContainer modifyServletContainer(String alias, Resource resource) {
-
-            ServletContainer servlet = null;
-
-            if ((servlet = aliasToServlet.get(alias)) != null)
+        protected Resource[] getResourcesByServerAilas(String serverAlias) {
+            Resource[] resources = new Resource[aliasToSetResources.get(serverAlias).size()];
+            int i = 0;
+            if (resources.length != 0)
             {
-                Set<Resource> resources = servlet.getConfiguration().getResources();
-                if (!resources.contains(resource))
+                Iterator<Resource> iter = aliasToSetResources.get(serverAlias).iterator();
+
+                while (iter.hasNext())
                 {
-                    resources.add(resource);
-                    return servlet;
+                    resources[i++] = iter.next();
                 }
             }
 
-            return servlet;
+            return resources;
         }
 
         protected void saveResourceByAlias(String alias, Resource resource) {
