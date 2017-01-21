@@ -69,6 +69,7 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.server.model.annotaions.instance.CookieParamInstance;
 import org.glassfish.jersey.server.model.annotaions.instance.HeaderParamInstance;
 import org.glassfish.jersey.server.model.annotaions.instance.PathParamInstance;
 import org.glassfish.jersey.server.model.annotaions.instance.QueryParamInstance;
@@ -438,7 +439,7 @@ public class Parameter implements AnnotatedElement {
         System.err.println(javaMethod.getName());
         for (java.lang.reflect.Parameter p : javaMethod.getParameters())
         {
-            System.err.println("  " + p.getName());
+            System.err.println("  " + p.getName()); //$NON-NLS-1$
         }
 //         }
 
@@ -496,8 +497,6 @@ public class Parameter implements AnnotatedElement {
             else if (p.getName().startsWith("header")) //$NON-NLS-1$
             {
                 String header = createHeaderName(p.getName());
-//                header = p.getName().substring("header".length()).toLowerCase(); //$NON-NLS-1$
-//                header = header.replaceAll("_", "-"); //$NON-NLS-1$//$NON-NLS-2$
 
                 HeaderParamInstance a = new HeaderParamInstance();
                 a.setValue(header);
@@ -509,7 +508,7 @@ public class Parameter implements AnnotatedElement {
 
                 parList.add(par);
             }
-            else if (p.getName().startsWith("query"))
+            else if (p.getName().startsWith("query")) //$NON-NLS-1$
             {
                 String query = createQueryName(p.getName());
                 QueryParamInstance q = new QueryParamInstance();
@@ -518,6 +517,18 @@ public class Parameter implements AnnotatedElement {
                 as[0] = q;
 
                 par = new Parameter(as, q, Parameter.Source.QUERY, query, p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else if (p.getName().startsWith("cookie")) //$NON-NLS-1$
+            {
+                String query = createCookieName(p.getName());
+                CookieParamInstance c = new CookieParamInstance();
+                c.setValue(query);
+                Annotation[] as = new CookieParamInstance[1];
+                as[0] = c;
+
+                par = new Parameter(as, c, Parameter.Source.COOKIE, query, p.getType(), p.getType(), paramEncoded, null);
 
                 parList.add(par);
             }
@@ -533,8 +544,13 @@ public class Parameter implements AnnotatedElement {
         return parList;
     }
 
+    private static String createCookieName(String query) {
+        query = query.substring("cookie".length()); //$NON-NLS-1$
+        return query;
+    }
+
     private static String createQueryName(String query) {
-        query = query.substring("query".length());
+        query = query.substring("query".length()); //$NON-NLS-1$
         query = Character.toLowerCase(query.charAt(0)) + query.substring(1);
         return query;
     }
@@ -585,7 +601,7 @@ public class Parameter implements AnnotatedElement {
 
     private static String getValue(Annotation a) {
         try {
-            Method m = a.annotationType().getMethod("value");
+            Method m = a.annotationType().getMethod("value"); //$NON-NLS-1$
             if (m.getReturnType() != String.class) {
                 return null;
             }
@@ -593,7 +609,7 @@ public class Parameter implements AnnotatedElement {
         } catch (Exception ex) {
             if (LOGGER.isLoggable(Level.FINER)) {
                 LOGGER.log(Level.FINER,
-                        String.format("Unable to get the %s annotation value property", a.getClass().getName()), ex);
+                    String.format("Unable to get the %s annotation value property", a.getClass().getName()), ex); //$NON-NLS-1$
             }
         }
         return null;
@@ -747,7 +763,7 @@ public class Parameter implements AnnotatedElement {
 
     @Override
     public String toString() {
-        return String.format("Parameter [type=%s, source=%s, defaultValue=%s]",
+        return String.format("Parameter [type=%s, source=%s, defaultValue=%s]", //$NON-NLS-1$
                 getRawType(), getSourceName(), getDefaultValue());
     }
 
