@@ -552,7 +552,7 @@ public class Parameter implements AnnotatedElement {
 
             header = header + partsOfHeader[i].toLowerCase();
 
-            if (i % 2 == 0 && i + 1 != partsOfHeader.length)
+            if (i + 1 != partsOfHeader.length)
             {
                 header = header + "-"; //$NON-NLS-1$
             }

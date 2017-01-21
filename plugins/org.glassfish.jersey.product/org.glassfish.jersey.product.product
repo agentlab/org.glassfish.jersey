@@ -126,6 +126,7 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.services.remoteserviceadmin"/>
       <plugin id="org.eclipse.osgi.util"/>
+      <plugin id="org.eclipse.session.service"/>
       <plugin id="org.eclipse.userstorage"/>
       <plugin id="org.eclipse.userstorage.service"/>
       <plugin id="org.eclipse.userstorage.service.host"/>
