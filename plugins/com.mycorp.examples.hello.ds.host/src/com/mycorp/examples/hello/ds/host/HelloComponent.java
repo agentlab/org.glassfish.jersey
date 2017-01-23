@@ -15,6 +15,7 @@ import com.mycorp.examples.hello.IHello;
 @Component(enabled = true, immediate = true,
     property = { "service.exported.interfaces=*", "service.exported.configs=ecf.jaxrs.jersey.server",
         "ecf.jaxrs.jersey.server.urlContext=http://localhost:8080", "ecf.jaxrs.jersey.server.alias=/helloo",
+        "ecf.jaxrs.jersey.server.exported.interfaces=com.mycorp.examples.hello.IHello,org.osgi.service.cm.ManagedService",
         "service.pid=com.mycorp.examples.hello.ds.host.HelloComponent" })
 
 //@Path("/api/blob")

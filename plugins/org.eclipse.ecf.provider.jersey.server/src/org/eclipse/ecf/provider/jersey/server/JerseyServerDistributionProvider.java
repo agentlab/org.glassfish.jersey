@@ -40,6 +40,7 @@ public class JerseyServerDistributionProvider
     public static final String ALIAS_PARAM_DEFAULT = "/org.eclipse.ecf.provider.jersey.server"; //$NON-NLS-1$
     public static final String SERVICE_ALIAS_PARAM = "ecf.jaxrs.jersey.server.service.alias"; //$NON-NLS-1$
     public static final String SERVER_ALIAS_PARAM = "ecf.jaxrs.jersey.server.alias"; //$NON-NLS-1$
+    public static final String EXPORTED_INTERFACES = "ecf.jaxrs.jersey.server.exported.interfaces"; //$NON-NLS-1$
 
     private static final Map<String, Set<Resource>> aliasToSetResources = new HashMap<>();
 
@@ -108,82 +109,86 @@ public class JerseyServerDistributionProvider
 
             for (Class<?> clazz : implClass.getInterfaces())
             {
-                if (clazz.getAnnotation(Path.class) == null)
+                System.out.println(clazz.getCanonicalName());
+                if (((String)registration.getProperty(EXPORTED_INTERFACES)).contains(clazz.getCanonicalName()))
                 {
-                    final Resource.Builder resourceBuilder = Resource.builder();
-                    ResourceMethod.Builder methodBuilder;
-                    Resource.Builder childResourceBuilder;
-                    String serviceResourcePath;
-                    String methodResourcePath;
-                    String methodName;
-                    String pathParam;
-                    String serviceAliace =
-                        (String)registration.getProperty(JerseyServerDistributionProvider.SERVICE_ALIAS_PARAM);
+                    if (clazz.getAnnotation(Path.class) == null)
+                    {
+                        final Resource.Builder resourceBuilder = Resource.builder();
+                        ResourceMethod.Builder methodBuilder;
+                        Resource.Builder childResourceBuilder;
+                        String serviceResourcePath;
+                        String methodResourcePath;
+                        String methodName;
+                        String pathParam;
+                        String serviceAliace =
+                            (String)registration.getProperty(JerseyServerDistributionProvider.SERVICE_ALIAS_PARAM);
 
-                    //class
-                    if (serviceAliace != null && !serviceAliace.equals("")) //$NON-NLS-1$
-                    {
-                        serviceResourcePath = serviceAliace;
-                    }
-                    else
-                    {
-                        serviceResourcePath = buildServicePath(clazz.getSimpleName());
-                    }
-                    resourceBuilder.path(serviceResourcePath);
-                    resourceBuilder.name(implClass.getName());
-
-                    //methods
-                    for (Method method : clazz.getMethods())
-                    {
-                        if (Modifier.isPublic(method.getModifiers()))
+                        //class
+                        if (serviceAliace != null && !serviceAliace.equals("")) //$NON-NLS-1$
                         {
-                            pathParam = pathParam(method);
-                            methodName = method.getName().toLowerCase();
+                            serviceResourcePath = serviceAliace;
+                        }
+                        else
+                        {
+                            serviceResourcePath = buildServicePath(clazz.getSimpleName());
+                        }
+                        resourceBuilder.path(serviceResourcePath);
+                        resourceBuilder.name(implClass.getName());
 
-                            methodResourcePath = buildMethodPath(methodName);
-                            if (pathParam != null)
+                        //methods
+                        for (Method method : clazz.getMethods())
+                        {
+                            if (Modifier.isPublic(method.getModifiers()))
                             {
-                                methodResourcePath =
-                                    methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam; //$NON-NLS-1$
-                            }
+                                pathParam = pathParam(method);
+                                methodName = method.getName().toLowerCase();
 
-
-
-                            childResourceBuilder = resourceBuilder.addChildResource(methodResourcePath);
-
-                            if (method.getAnnotation(Path.class) == null)
-                            {
-                                if (methodName.contains("get")) //$NON-NLS-1$
+                                methodResourcePath = buildMethodPath(methodName);
+                                if (pathParam != null)
                                 {
-                                    methodBuilder = childResourceBuilder.addMethod("GET"); //$NON-NLS-1$
+                                    methodResourcePath =
+                                        methodResourcePath.equals("/") ? pathParam : methodResourcePath + pathParam; //$NON-NLS-1$
                                 }
-                                else
+
+
+
+                                childResourceBuilder = resourceBuilder.addChildResource(methodResourcePath);
+
+                                if (method.getAnnotation(Path.class) == null)
                                 {
-                                    if (methodName.contains("delete")) //$NON-NLS-1$
+                                    if (methodName.contains("get")) //$NON-NLS-1$
                                     {
-                                        methodBuilder = childResourceBuilder.addMethod("DELETE"); //$NON-NLS-1$
-                                    }
-                                    else if (methodName.contains("post")) //$NON-NLS-1$
-                                    {
-                                        methodBuilder = childResourceBuilder.addMethod("POST"); //$NON-NLS-1$
+                                        methodBuilder = childResourceBuilder.addMethod("GET"); //$NON-NLS-1$
                                     }
                                     else
                                     {
-                                        methodBuilder = childResourceBuilder.addMethod("PUT"); //$NON-NLS-1$
+                                        if (methodName.contains("delete")) //$NON-NLS-1$
+                                        {
+                                            methodBuilder = childResourceBuilder.addMethod("DELETE"); //$NON-NLS-1$
+                                        }
+                                        else if (methodName.contains("post")) //$NON-NLS-1$
+                                        {
+                                            methodBuilder = childResourceBuilder.addMethod("POST"); //$NON-NLS-1$
+                                        }
+                                        else
+                                        {
+                                            methodBuilder = childResourceBuilder.addMethod("PUT"); //$NON-NLS-1$
+                                        }
                                     }
+
+                                    methodBuilder.produces(MediaType.APPLICATION_JSON)//APPLICATION_JSON)
+                                        //.handledBy(implClass, method)
+                                        .handledBy(registration.getService(), method).handlingMethod(method).extended(
+                                            false);
+
                                 }
-
-                                methodBuilder.produces(MediaType.APPLICATION_JSON)//APPLICATION_JSON)
-                                    //.handledBy(implClass, method)
-                                    .handledBy(registration.getService(), method).handlingMethod(method).extended(
-                                        false);
-
                             }
                         }
-                    }
-                    final Resource resource = resourceBuilder.build();
+                        final Resource resource = resourceBuilder.build();
 
-                    saveResourceByAlias(serverAlias, resource);
+                        saveResourceByAlias(serverAlias, resource);
+                    }
                 }
             }
 
