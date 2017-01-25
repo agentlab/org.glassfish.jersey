@@ -522,13 +522,14 @@ public class Parameter implements AnnotatedElement {
             }
             else if (p.getName().startsWith("cookie")) //$NON-NLS-1$
             {
-                String query = createCookieName(p.getName());
+                String cookie = createCookieName(p.getName());
                 CookieParamInstance c = new CookieParamInstance();
-                c.setValue(query);
+                c.setValue(cookie);
                 Annotation[] as = new CookieParamInstance[1];
                 as[0] = c;
 
-                par = new Parameter(as, c, Parameter.Source.COOKIE, query, p.getType(), p.getType(), paramEncoded, null);
+                par =
+                    new Parameter(as, c, Parameter.Source.COOKIE, cookie, p.getType(), p.getType(), paramEncoded, null);
 
                 parList.add(par);
             }
