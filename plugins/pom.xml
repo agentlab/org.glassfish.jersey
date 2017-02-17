@@ -13,6 +13,20 @@
 		<relativePath>../releng/org.glassfish.jersey.releng/pom.xml</relativePath>
 	</parent>
 	
+	<modules>
+		<module>com.mycorp.examples.hello</module>
+		<module>com.mycorp.examples.hello.ds.host</module>
+        <module>org.eclipse.ecf.provider.jaxrs</module>
+        <module>org.eclipse.ecf.provider.jaxrs.server</module>
+		<module>org.eclipse.ecf.provider.jersey.server</module>
+		<module>org.glassfish.jersey.client</module>
+		<module>org.glassfish.jersey.common</module>
+		<module>org.glassfish.jersey.container.servlet</module>
+		<module>org.glassfish.jersey.container.servlet.core</module>
+		<module>org.glassfish.jersey.media.json.jackson</module>
+		<module>org.glassfish.jersey.server</module>
+	</modules>
+	
 	<build>
 		<plugins>
 			<plugin>

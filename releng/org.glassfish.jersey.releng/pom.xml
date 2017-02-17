@@ -17,15 +17,15 @@
 	
 	<modules>
 		<module>../org.glassfish.jersey.target</module>
-		
-		<module>../../plugins/org.glassfish.jersey.common</module>
+		<module>../../plugins</module>
+		<!--<module>../../plugins/org.glassfish.jersey.common</module>
 		<module>../../plugins/org.glassfish.jersey.client</module>
 		<module>../../plugins/org.glassfish.jersey.server</module>
 		
 		<module>../../plugins/org.glassfish.jersey.container.servlet.core</module>
 		<module>../../plugins/org.glassfish.jersey.container.servlet</module>
 		
-		<module>../../plugins/org.glassfish.jersey.media.json.jackson</module>
+		<module>../../plugins/org.glassfish.jersey.media.json.jackson</module> -->
 		
 		<!--<module>../../tests/org.glassfish.jersey.api.tests</module>
 		<module>../../tests/org.glassfish.jersey.compatibility.tests</module>
