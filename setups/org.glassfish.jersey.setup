@@ -147,7 +147,8 @@
       <requirement
           name="org.glassfish.hk2.locator"/>
       <requirement
-          name="org.glassfish.hk2.osgi-resource-locator"/>
+          name="org.glassfish.hk2.osgi-resource-locator"
+          versionRange="[1.0.0,2.0.0)"/>
       <requirement
           name="org.glassfish.hk2.utils"/>
       <requirement
