@@ -59,6 +59,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -68,6 +69,10 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.server.model.annotaions.instance.CookieParamInstance;
+import org.glassfish.jersey.server.model.annotaions.instance.HeaderParamInstance;
+import org.glassfish.jersey.server.model.annotaions.instance.PathParamInstance;
+import org.glassfish.jersey.server.model.annotaions.instance.QueryParamInstance;
 
 /**
  * Method parameter model.
@@ -140,7 +145,7 @@ public class Parameter implements AnnotatedElement {
     }
 
     private static Map<Class, ParamAnnotationHelper> createParamAnnotationHelperMap() {
-        Map<Class, ParamAnnotationHelper> m = new WeakHashMap<Class, ParamAnnotationHelper>();
+        Map<Class, ParamAnnotationHelper> m = new WeakHashMap<>();
         m.put(Context.class, new ParamAnnotationHelper<Context>() {
 
             @Override
@@ -330,11 +335,17 @@ public class Parameter implements AnnotatedElement {
         ClassTypePair ct = ReflectionHelper.resolveGenericType(
                 concreteClass, declaringClass, rawType, type);
 
+//        if (paramAnnotation == null && declaringClass.getMethods()[0].getName() == "postHello3") //$NON-NLS-1$
+//        {
+//            return new Parameter(annotations, paramAnnotation, Parameter.Source.PATH, "urltoken", ct.rawClass(),
+//                ct.type(), paramEncoded, paramDefault);
+//        }
+
         return new Parameter(
                 annotations,
                 paramAnnotation,
-                paramSource,
-                paramName,
+            paramSource,
+            paramName,
                 ct.rawClass(),
                 ct.type(),
                 paramEncoded,
@@ -349,7 +360,7 @@ public class Parameter implements AnnotatedElement {
             Type[] genericParameterTypes,
             Annotation[][] parameterAnnotations) {
 
-        final List<Parameter> parameters = new ArrayList<Parameter>(parameterTypes.length);
+        final List<Parameter> parameters = new ArrayList<>(parameterTypes.length);
 
         for (int i = 0; i < parameterTypes.length; i++) {
             final Parameter parameter = Parameter.create(
@@ -369,6 +380,7 @@ public class Parameter implements AnnotatedElement {
 
         return parameters;
     }
+
 
     /**
      * Create a list of parameter models for a given resource method handler
@@ -423,7 +435,37 @@ public class Parameter implements AnnotatedElement {
             Method javaMethod,
             boolean keepEncoded) {
 
+//        for (Method m : clz.getDeclaredMethods()) {
+        System.err.println(javaMethod.getName());
+        for (java.lang.reflect.Parameter p : javaMethod.getParameters())
+        {
+            System.err.println("  " + p.getName()); //$NON-NLS-1$
+        }
+//         }
+
         AnnotatedMethod method = new AnnotatedMethod(javaMethod);
+
+        boolean notParamAnnotations = true;
+
+        for (int i = 0; i < method.getParameterAnnotations().length; i++)
+        {
+            if (method.getParameterAnnotations()[0].length != 0)
+            {
+                notParamAnnotations = false;
+            }
+        }
+
+        if (method.getAnnotations().length == 0 && notParamAnnotations)
+        {
+            if (javaMethod.getName().startsWith(HttpMethod.GET.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.POST.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.DELETE.toLowerCase())
+                || javaMethod.getName().contains(HttpMethod.PUT.toLowerCase()))
+            {
+                return createWithoutAnnotations(javaMethod,
+                    ((null != method.getAnnotation(Encoded.class)) || keepEncoded));
+            }
+        }
 
         return create(
                 concreteClass, declaringClass,
@@ -431,6 +473,110 @@ public class Parameter implements AnnotatedElement {
                 method.getParameterTypes(),
                 method.getGenericParameterTypes(),
                 method.getParameterAnnotations());
+    }
+
+    private static List<Parameter> createWithoutAnnotations(Method method, boolean paramEncoded) {
+
+        List<Parameter> parList = new ArrayList<>();
+
+        Parameter par = null;
+
+        for (java.lang.reflect.Parameter p : method.getParameters())
+        {
+            if (p.getName().startsWith("url")) //$NON-NLS-1$
+            {
+                PathParamInstance a = new PathParamInstance();
+                a.setValue(p.getName());
+                Annotation[] as = new PathParamInstance[1];
+                as[0] = a;
+                par = new Parameter(as, a, Parameter.Source.PATH,
+                    p.getName(), p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else if (p.getName().startsWith("header")) //$NON-NLS-1$
+            {
+                String header = createHeaderName(p.getName());
+
+                HeaderParamInstance a = new HeaderParamInstance();
+                a.setValue(header);
+                Annotation[] as = new HeaderParamInstance[1];
+                as[0] = a;
+
+                par =
+                    new Parameter(as, a, Parameter.Source.HEADER, header, p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else if (p.getName().startsWith("query")) //$NON-NLS-1$
+            {
+                String query = createQueryName(p.getName());
+                QueryParamInstance q = new QueryParamInstance();
+                q.setValue(query);
+                Annotation[] as = new QueryParamInstance[1];
+                as[0] = q;
+
+                par = new Parameter(as, q, Parameter.Source.QUERY, query, p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else if (p.getName().startsWith("cookie")) //$NON-NLS-1$
+            {
+                String cookie = createCookieName(p.getName());
+                CookieParamInstance c = new CookieParamInstance();
+                c.setValue(cookie);
+                Annotation[] as = new CookieParamInstance[1];
+                as[0] = c;
+
+                par =
+                    new Parameter(as, c, Parameter.Source.COOKIE, cookie, p.getType(), p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+            else
+            {
+                par = new Parameter(p.getAnnotations(), null, Parameter.Source.ENTITY, null, p.getType(),
+                    p.getType(), paramEncoded, null);
+
+                parList.add(par);
+            }
+        }
+
+        return parList;
+    }
+
+    private static String createCookieName(String query) {
+        query = query.substring("cookie".length()); //$NON-NLS-1$
+        return query;
+    }
+
+    private static String createQueryName(String query) {
+        query = query.substring("query".length()); //$NON-NLS-1$
+        query = Character.toLowerCase(query.charAt(0)) + query.substring(1);
+        return query;
+    }
+
+    private static String createHeaderName(String header) {
+
+        header = header.substring("header".length()); //$NON-NLS-1$
+
+        String[] partsOfHeader = header.split("(?=\\p{Lu})"); //$NON-NLS-1$
+
+        header = ""; //$NON-NLS-1$
+
+        for (int i = 0; i < partsOfHeader.length; i++)
+        {
+
+            header = header + partsOfHeader[i].toLowerCase();
+
+            if (i + 1 != partsOfHeader.length)
+            {
+                header = header + "-"; //$NON-NLS-1$
+            }
+
+        }
+
+        return header;
     }
 
     /**
@@ -456,7 +602,7 @@ public class Parameter implements AnnotatedElement {
 
     private static String getValue(Annotation a) {
         try {
-            Method m = a.annotationType().getMethod("value");
+            Method m = a.annotationType().getMethod("value"); //$NON-NLS-1$
             if (m.getReturnType() != String.class) {
                 return null;
             }
@@ -464,7 +610,7 @@ public class Parameter implements AnnotatedElement {
         } catch (Exception ex) {
             if (LOGGER.isLoggable(Level.FINER)) {
                 LOGGER.log(Level.FINER,
-                        String.format("Unable to get the %s annotation value property", a.getClass().getName()), ex);
+                    String.format("Unable to get the %s annotation value property", a.getClass().getName()), ex); //$NON-NLS-1$
             }
         }
         return null;
@@ -618,26 +764,55 @@ public class Parameter implements AnnotatedElement {
 
     @Override
     public String toString() {
-        return String.format("Parameter [type=%s, source=%s, defaultValue=%s]",
+        return String.format("Parameter [type=%s, source=%s, defaultValue=%s]", //$NON-NLS-1$
                 getRawType(), getSourceName(), getDefaultValue());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Parameter parameter = (Parameter) o;
 
-        if (encoded != parameter.encoded) return false;
-        if (!Arrays.equals(annotations, parameter.annotations)) return false;
-        if (defaultValue != null ? !defaultValue.equals(parameter.defaultValue) : parameter.defaultValue != null) return false;
-        if (rawType != null ? !rawType.equals(parameter.rawType) : parameter.rawType != null) return false;
-        if (source != parameter.source) return false;
-        if (sourceAnnotation != null ? !sourceAnnotation.equals(parameter.sourceAnnotation) : parameter.sourceAnnotation != null)
+        if (encoded != parameter.encoded)
+        {
             return false;
-        if (sourceName != null ? !sourceName.equals(parameter.sourceName) : parameter.sourceName != null) return false;
-        if (type != null ? !type.equals(parameter.type) : parameter.type != null) return false;
+        }
+        if (!Arrays.equals(annotations, parameter.annotations))
+        {
+            return false;
+        }
+        if (defaultValue != null ? !defaultValue.equals(parameter.defaultValue) : parameter.defaultValue != null)
+        {
+            return false;
+        }
+        if (rawType != null ? !rawType.equals(parameter.rawType) : parameter.rawType != null)
+        {
+            return false;
+        }
+        if (source != parameter.source)
+        {
+            return false;
+        }
+        if (sourceAnnotation != null ? !sourceAnnotation.equals(parameter.sourceAnnotation) : parameter.sourceAnnotation != null)
+        {
+            return false;
+        }
+        if (sourceName != null ? !sourceName.equals(parameter.sourceName) : parameter.sourceName != null)
+        {
+            return false;
+        }
+        if (type != null ? !type.equals(parameter.type) : parameter.type != null)
+        {
+            return false;
+        }
 
         return true;
     }
