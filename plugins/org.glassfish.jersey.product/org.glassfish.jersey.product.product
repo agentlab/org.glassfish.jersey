@@ -139,8 +139,7 @@
       <plugin id="org.junit"/>
       <plugin id="org.objectweb.asm"/>
       <plugin id="org.objectweb.asm.all.debug"/>
-      <plugin id="org.slf4j.api"/>
-      <plugin id="org.slf4j.ext"/>
+      <plugin id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <plugin id="org.slf4j.jcl"/>
       <plugin id="org.slf4j.jul"/>
       <plugin id="org.slf4j.log4j"/>
